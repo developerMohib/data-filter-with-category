@@ -76,7 +76,7 @@ function App() {
         {categoryArray.map((category, index) => (
           <TabPanel key={index}>
             {filteredData.length > 0 ? (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="md:grid grid-cols-3 gap-4">
                 {filteredData.map((item) => (
                   <div key={item._id} className="p-4 max-w-md">
                     <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
