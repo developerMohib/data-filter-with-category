@@ -65,13 +65,15 @@ function App() {
       </div>
 
       <Tabs>
-        <TabList>
+        <div className="overflow-x-auto"> 
+        <TabList className='inline-flex mb-4 space-x-4 '>
           {categoryArray.map((category, index) => (
-            <Tab onClick={() => handleCategory(category)} key={index}>
+            <Tab className=" whitespace-nowrap border-b-2" onClick={() => handleCategory(category)} key={index}>
               {category}
             </Tab>
           ))}
         </TabList>
+        </div>
 
         {categoryArray.map((category, index) => (
           <TabPanel key={index}>
