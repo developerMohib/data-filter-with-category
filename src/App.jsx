@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("Jewelry");
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
@@ -15,8 +16,10 @@ function App() {
         const resData = await fetch(
           "https://endgame-job-task-server.vercel.app/api/products"
         );
-        const data = await resData.json();
-        setData(data);
+        const data = await resData?.json();
+        if (data) {
+          setData(data);
+        }
       } catch (error) {
         console.log("here the error", error);
       } finally {
@@ -25,6 +28,21 @@ function App() {
     };
     dataFetch();
   }, []);
+
+  useEffect(() => {
+    const filterData = selectedCategory === "All" ? data : data?.filter((item) => item.category === selectedCategory);
+    setFilteredData(filterData);
+  }, [data, selectedCategory])
+
+
+
+  // filter data
+  const handleCategory = async (category) => {
+    setSelectedCategory(category)
+  };
+  console.log("selectedCategory", selectedCategory);
+  console.log("data", filteredData);
+
 
   // make a array by filtering data
   let categoryArray = [];
@@ -43,13 +61,7 @@ function App() {
       </div>
     );
 
-  const handleCategory = async (category) => {
-    console.log("Selected Tab Index:", category);
-    // filter data
-    const filterData = data?.filter((item) => item.category === category);
-    setFilteredData(filterData);
-  };
-  console.log("data", filteredData);
+
 
   return (
     <>
@@ -65,21 +77,22 @@ function App() {
       </div>
 
       <Tabs>
-        <div className="overflow-x-auto"> 
-        <TabList className='inline-flex mb-4 space-x-4 '>
-          {categoryArray.map((category, index) => (
-            <Tab className=" whitespace-nowrap border-b-2" onClick={() => handleCategory(category)} key={index}>
-              {category}
-            </Tab>
-          ))}
-        </TabList>
+        <div className="overflow-x-auto">
+          <TabList className='inline-flex mb-4 space-x-4 '>
+            <div> <button className={` ${selectedCategory === "All" ? "border-b-2 border-gray-400" : " " } `} onClick={() => setSelectedCategory("All")}> All </button> </div>
+            {categoryArray?.map((category, index) => (
+              <Tab className={`${selectedCategory !== "All" ? "whitespace-nowrap border-b-2 cursor-pointer" : " "}`} onClick={() => handleCategory(category)} key={index}>
+                {category}
+              </Tab>
+            ))}
+          </TabList>
         </div>
 
-        {categoryArray.map((category, index) => (
+        {categoryArray?.map((category, index) => (
           <TabPanel key={index}>
-            {filteredData.length > 0 ? (
+            {filteredData?.length > 0 ? (
               <div className="md:grid grid-cols-3 gap-4">
-                {filteredData.map((item) => (
+                {filteredData?.map((item) => (
                   <div key={item._id} className="p-4 max-w-md">
                     <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
                       <img
@@ -114,7 +127,7 @@ function App() {
                             </svg>
                           </a>
                           <span className="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
-                         price : {item.price}
+                            price : {item.price}
                           </span>
                           <span className="text-gray-400 inline-flex items-center leading-none text-sm">
                             {item.brand}
