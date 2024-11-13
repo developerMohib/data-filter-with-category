@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("Jewelry");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
@@ -34,15 +34,13 @@ function App() {
     setFilteredData(filterData);
   }, [data, selectedCategory])
 
-
+const length = filteredData?.length ;
+console.log('len', length)
 
   // filter data
   const handleCategory = async (category) => {
     setSelectedCategory(category)
   };
-  console.log("selectedCategory", selectedCategory);
-  console.log("data", filteredData);
-
 
   // make a array by filtering data
   let categoryArray = [];
@@ -56,12 +54,10 @@ function App() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-start h-screen">
-        <p> Loading</p>{" "}
+      <div className="flex justify-center items-center h-screen">
+        <div className="border-2 animate-ping border-orange-500 h-8 w-8 rounded-full" />
       </div>
     );
-
-
 
   return (
     <>
@@ -79,9 +75,9 @@ function App() {
       <Tabs>
         <div className="overflow-x-auto">
           <TabList className='inline-flex mb-4 space-x-4 '>
-            <div> <button className={` ${selectedCategory === "All" ? "border-b-2 border-gray-400" : " " } `} onClick={() => setSelectedCategory("All")}> All </button> </div>
+            <div> <button className={`border-b-2 ${selectedCategory === "All" ? "border-gray-400" : "border-gray-200"} `} onClick={() => setSelectedCategory("All")}> All </button> </div>
             {categoryArray?.map((category, index) => (
-              <Tab className={`${selectedCategory !== "All" ? "whitespace-nowrap border-b-2 cursor-pointer" : " "}`} onClick={() => handleCategory(category)} key={index}>
+              <Tab className={`${selectedCategory !== "All" ? "whitespace-nowrap border-b-2 cursor-pointer" : "border-b-2 border-gray-200"}`} onClick={() => handleCategory(category)} key={index}>
                 {category}
               </Tab>
             ))}
